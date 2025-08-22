@@ -1,0 +1,44 @@
+Problem Statement:
+Leetcode #1539. Kth Missing Positive Number
+Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
+Return the kth positive integer that is missing from this array.
+
+# Solution by Srijani Guha Ray
+
+Approach
+since arr is sorted in ascending order, ideally it should have had continuous all digits. we will loop through the array and if any digit is missing we will count that k number of times, i.e till k>0.
+there is one edge case: suppose the given array is [1,2,3,4] and k=2, in this case the continuity is maintained inside the given array. missing numbers are outside the limit of the array, hence one check if(k>0) is required.
+
+Complexity
+Time complexity:
+O(n)
+
+Space complexity:
+O(1)
+
+Code
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+        int i=0;
+        int digit=1;
+        int n=arr.size();
+        while(k>0 && i<n)
+        {
+            if(arr[i]==digit)
+            {
+                i++;
+                digit++;
+            }
+            else{
+                digit++;
+                k--;
+            }
+        }
+        if(k>0)
+        {
+            return arr[n-1]+k;
+        }
+        return digit-1;
+    }
+};
