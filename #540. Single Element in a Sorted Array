@@ -1,0 +1,74 @@
+Problem Statement
+540. Single Element in a Sorted Array
+
+You are given a sorted array consisting of only integers where every element appears exactly twice, except for one element which appears exactly once.
+
+Return the single element that appears only once.
+
+Your solution must run in O(log n) time and O(1) space.
+
+# Solution by Srijani Guha Ray
+Intuition
+In the sorted array, every element appears exactly twice except one.
+
+If we pair up the array correctly:
+
+Before the single element, pairs are aligned (first occurrence at even index, second at odd index).
+
+After the single element, this alignment breaks (first occurrence shifts to odd index).
+
+Using binary search, we can detect where this “pairing rule” breaks, which tells us where the single element lies.
+
+Approach
+Use binary search with two pointers low and high.
+Find mid.
+Case 1: nums[mid] == nums[mid-1]
+If (mid-1) is odd → single element lies to the left.
+Else → lies to the right.
+Case 2: nums[mid] == nums[mid+1]
+If (n - mid - 2) is odd → single element lies to the right.
+Else → lies to the left.
+Case 3: Otherwise, nums[mid] itself is the single element.
+Loop continues until the element is found.
+Complexity
+Time complexity:
+O(log n).
+
+Space complexity:
+O(1).
+
+
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        
+
+
+        int low=0;
+        int n=nums.size();
+        int high=nums.size()-1;
+        while(low<=high)
+        {
+            int mid=low+(high-low)/2;
+
+            if(mid!=0 && nums[mid]==nums[mid-1])
+            {
+                if((mid-1)%2 !=0)
+                    high=mid-2;
+                else
+                    low=mid+1;
+            }
+            else if( mid != n-1 && nums[mid ]==nums[mid+1])
+            {
+                if((n-mid-2)%2!=0)
+                    low=mid+2;
+                else
+                    high=mid-1;
+            }
+            else 
+                return nums[mid];
+        }
+        return -1;
+    }
+};
