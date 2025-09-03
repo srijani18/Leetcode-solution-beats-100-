@@ -1,0 +1,69 @@
+Problem Statement:
+You are given an m x n integer matrix matrix with the following two properties:
+
+Each row is sorted in non-decreasing order.
+The first integer of each row is greater than the last integer of the previous row.
+Given an integer target, return true if target is in matrix or false otherwise.
+
+You must write a solution in O(log(m * n)) time complexity.
+
+# Solution By Srijani Guha Ray
+
+Intuition
+The problem is to find a target value in a 2D matrix. A naive approach would be to iterate through every element, but a more efficient method is needed. The key is to recognize that the given matrix has a special property: it's sorted both row-wise and column-wise. This means that a standard binary search, which works on a 1D sorted array, can be adapted to this 2D structure. The trick is to treat the 2D matrix as a single, flattened 1D array.
+
+Approach
+We can treat the m×n matrix as a single, sorted array of size m×n. We can then perform a binary search on this "virtual" 1D array.
+
+Initialize Pointers: Set a low pointer to the first element's virtual index (0) and a high pointer to the last element's virtual index (m×n−1).
+Binary Search Loop: Continue the loop as long as low is less than or equal to high.
+Find Midpoint: Calculate the mid index using the standard binary search formula: mid = low + (high - low) / 2.
+Map to 2D Coordinates: Convert the mid index back to 2D coordinates (row, col).
+The row index is row = mid / n (integer division).
+The column index is col = mid % n (modulo).
+Compare: Compare the value matrix[row][col] with the target.
+If matrix[row][col] == target, we found it! Return true.
+If matrix[row][col] < target, the target must be in the right half of the virtual array, so update low = mid + 1.
+If matrix[row][col] > target, the target must be in the left half, so update high = mid - 1.
+Return False: If the loop finishes without finding the target, it doesn't exist in the matrix. Return false.
+Complexity
+Time complexity: O(log(m * n))
+
+We are performing a binary search on m×n elements.
+The search space is halved in each iteration.
+Therefore, the time complexity is logarithmic with respect to the total number of elements.
+Space complexity: O(1)
+
+We are using only a few variables (low, high, mid, etc.) to store pointers.
+The space required is constant and does not depend on the size of the input matrix.
+
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        
+        int m=matrix.size();
+        int n=matrix[0].size();
+        int low=0; 
+        int high= (m*n)-1;
+
+        while(low<=high)
+
+        {
+
+            int mid=low+(high-low)/2;
+
+            int row=mid/n;
+            int col=mid%n;
+
+            if(matrix[row][col]==target)
+                return true;
+            else if(matrix[row][col]<target)
+                low=mid+1;
+            else
+                high=mid-1;
+
+        }
+        return false;
+    }
+};
