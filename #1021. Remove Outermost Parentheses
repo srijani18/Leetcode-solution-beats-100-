@@ -1,0 +1,100 @@
+Problem Statement:
+A valid parentheses string is either empty "", "(" + A + ")", or A + B, where A and B are valid parentheses strings, and + represents string concatenation.
+
+For example, "", "()", "(())()", and "(()(()))" are all valid parentheses strings.
+A valid parentheses string s is primitive if it is nonempty, and there does not exist a way to split it into s = A + B, with A and B nonempty valid parentheses strings.
+
+Given a valid parentheses string s, consider its primitive decomposition: s = P1 + P2 + ... + Pk, where Pi are primitive valid parentheses strings.
+
+Return s after removing the outermost parentheses of every primitive string in the primitive decomposition of s.
+
+#Solution by Srijani Guha Ray
+
+Intuition
+We are given a valid parentheses string that is made of primitive parentheses substrings.
+
+A primitive parentheses substring is one that cannot be broken further into smaller valid substrings.
+
+Each primitive has an outermost pair of parentheses that should be removed.
+
+
+
+Example:
+s = "(()())(())"
+
+Break into primitives: "(()())" and "(())"
+
+Remove outermost: "()()" + "()" = "()()()"
+
+So, we just need to track the nesting depth:
+
+When we see '(':
+
+If we are already inside another '(' (depth > 0), we keep it.
+
+Otherwise, it’s the outermost — skip it.
+
+When we see ')':
+
+If the depth after decrement is still > 0, we keep it.
+
+Otherwise, it’s the closing outermost — skip it.
+
+Approach
+Initialize count = 0 (to track depth).
+
+Traverse the string character by character:
+
+If '(':
+
+If count > 0, append to result.
+
+Increment count.
+
+If ')':
+
+Decrement count.
+If count > 0, append to result.
+Return the result string.
+
+Complexity
+Time complexity:O(n)
+
+Space complexity:O(1)
+
+Code
+class Solution {
+public:
+    string removeOuterParentheses(string s) {
+        
+
+        string ans="";
+        int count=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='(' )
+            {  
+                if(count>0)
+                {
+                    ans+=s[i];
+                    
+                }
+                count++;
+
+            }
+            else if(s[i]==')')
+
+            {
+
+                if(count>1)
+                {
+                    ans+=s[i];
+
+                }
+                count--;
+
+            }
+        }
+        return ans;
+    }
+};
