@@ -1,0 +1,84 @@
+Problem statement:
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+
+#solution by Srijani Guha Ray
+
+Intuition
+A linked list is just a sequence of nodes connected by arrows (next pointers).
+Example:
+
+1 → 2 → 3 → 4 → NULL
+
+We want to reverse it into:
+
+4 → 3 → 2 → 1 → NULL
+
+The challenge: if we just flip the arrow, we lose track of the remaining list.
+So at every step:
+
+Save the next node before breaking the link.
+
+Reverse the arrow of the current node (curr->next = prev).
+
+Move forward: shift both prev and curr.
+
+Keep doing this until you reach the end.
+
+Approach
+Initialize two pointers:
+
+prev = NULL (end of reversed list)
+
+curr = head (start of original list)
+
+Traverse the list:
+
+Store the next node: next = curr->next
+
+Reverse pointer: curr->next = prev
+
+Move prev forward: prev = curr
+
+Move curr forward: curr = next
+
+At the end, prev points to the new head of the reversed list.
+
+Complexity
+Time complexity:
+O(N)
+
+Space complexity:
+O(1)
+
+Code
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        
+
+        ListNode* prev=NULL;
+        ListNode* curr=head;
+
+
+        while(curr!=NULL)
+        {
+            ListNode* next=curr->next;
+            curr->next=prev;
+            
+            prev=curr;
+            curr=next;
+        }
+        return prev;
+    }
+};
