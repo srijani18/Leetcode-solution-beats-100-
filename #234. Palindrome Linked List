@@ -1,0 +1,100 @@
+Problem Statement: Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+
+#Solution by Srijani Guha Ray
+
+Intuition
+Find the middle using fast & slow pointers
+
+fast moves 2 steps, slow moves 1 step.
+
+When fast reaches the end, slow is at the middle.
+
+If the list length is odd, skip the exact middle (since it doesn’t affect palindrome check).
+
+Reverse the second half of the list
+
+Starting from slow, reverse pointers to get the second half in reverse order.
+Example: 1 → 2 → 3 → 2 → 1
+
+First half: 1 → 2
+Second half (reversed): 1 → 2
+
+.Compare the first half and reversed second half
+
+Start one pointer at the head, one pointer at the start of the reversed second half.
+
+Compare node values one by one.
+
+If all match → palindrome. If any mismatch → not palindrome.
+
+Approach
+In arrays, palindrome check = compare arr[i] with arr[n-1-i].
+
+In linked lists, we can’t jump to the end directly.
+
+So we use the fast & slow pointer trick to split into halves.
+
+Then reverse the second half so we can compare both halves in one forward pass.
+
+This avoids extra space (like copying into an array).
+
+Complexity
+Time complexity:
+O(N)
+
+Space complexity:
+O(1)
+
+Code
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        
+
+        ListNode* fast=head;
+        ListNode* slow= head;
+        while(fast && fast->next)
+        {
+            fast=fast->next->next;
+            slow=slow->next;
+        
+        }
+
+        if(fast!=NULL) //if length of LL is odd skip the middle node
+        {
+            slow=slow->next;
+        }
+
+        ListNode* curr=slow;
+        ListNode* prev=NULL;
+
+        while(curr)
+        {
+            ListNode* next=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+        }
+        ListNode* dummy=head;
+        while(prev)
+        {
+            if(dummy->val!=prev->val)
+                return false;
+            prev=prev->next;
+            dummy=dummy->next;
+        }
+        return true;
+        
+    }
+};
+ 
