@@ -1,0 +1,83 @@
+Problem Statement:
+
+Given the head of a linked list, remove the nth node from the end of the list and return its head.
+
+#solution by Srijani Guha Ray
+
+Intuition
+We want to remove the nth node from the end without first counting the length of the list.
+
+If we can somehow know the node just before the one we want to delete, we can easily unlink it (slow->next = slow->next->next).
+
+To achieve this, we use the two-pointer technique:
+
+Place both pointers (fast and slow) at a dummy node before head.
+
+Move the fast pointer n+1 steps ahead, so that the gap between fast and slow is exactly n+1.
+
+Then move both together until fast reaches the end.
+→ At this point, slow is just before the node to delete.
+
+Delete the target node by skipping it.
+
+The dummy node ensures we can handle edge cases (like removing the head itself) gracefully.
+
+Approach
+Create a dummy node that points to head.
+
+Initialize fast and slow at dummy.
+
+Move fast forward n+1 steps.
+
+This creates a gap of n between slow and fast.
+Move both fast and slow one step at a time until fast reaches the end.
+
+Now slow is right before the node to remove.
+Delete the node: slow->next = slow->next->next.
+
+Return dummy->next as the new head.
+
+Complexity
+Time complexity:
+O(N)
+
+Space complexity:
+O(1)
+
+Code
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if(head==NULL) return NULL;
+        ListNode* dummy = new ListNode(0, head);  // dummy node
+        ListNode* fast = dummy;
+        ListNode* slow = dummy;
+        
+        int k=n;
+  
+
+       
+         for(int i=0; i<=n; i++) {
+            
+             fast = fast->next;
+        }
+
+         while(fast != NULL) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+   
+        slow->next = slow->next->next;
+        return dummy->next;
+    }
+};
