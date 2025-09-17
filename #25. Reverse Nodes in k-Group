@@ -1,0 +1,107 @@
+# Reverse Nodes in k-Group — C++ Easy Solution (Beats 100%)
+
+**Author:** Srijani Guha Ray  
+ 
+
+---
+
+## Intuition
+To reverse nodes in groups of `k`, think of splitting the linked list into chunks of size `k`.
+
+- Each chunk is reversed, but if there are fewer than `k` nodes left at the end, that group should stay as is.  
+- Using a dummy node makes reconnection easier, even if the head changes after reversing the first group.  
+- By disconnecting and reconnecting pointers carefully, we can reverse each group in-place without extra memory.
+
+---
+
+## Approach
+1. **Dummy Node for Easy Head Handling**  
+   - Create a dummy node pointing to `head`.  
+   - Use `prevGroupEnd` to track the node before the group being reversed.
+
+2. **Locate Each Group of k Nodes**  
+   - From `prevGroupEnd`, move `k` steps ahead to find the `kth` node.  
+   - If fewer than `k` nodes remain, stop—no more reversals are needed.
+
+3. **Detach and Reverse**  
+   - Save pointers:  
+     - `groupStart = prevGroupEnd->next` (first node of the group)  
+     - `nextGroupStart = kth->next` (node after the group)  
+   - Temporarily disconnect: `kth->next = nullptr`.  
+   - Reverse the group using `reverseLL`.
+
+4. **Reconnect**  
+   - Link the reversed group back:  
+     - `prevGroupEnd->next = reversedHead`  
+     - `groupStart->next = nextGroupStart`  
+   - Move `prevGroupEnd` to `groupStart` (now the end of the reversed group).
+
+5. **Repeat Until End**  
+   - Continue scanning and reversing groups until fewer than `k` nodes remain.
+
+---
+
+## Complexity
+- **Time Complexity:** `O(n)` – Each node is visited and reversed once.  
+- **Space Complexity:** `O(1)` – In-place reversal with only a few pointers.  
+
+---
+
+## Code
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseLL(ListNode* head) {
+        ListNode* curr = head;
+        ListNode* prev = nullptr;
+        ListNode* next;
+        while (curr) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* dummy = new ListNode(0, head);
+        ListNode* prevGroupEnd = dummy;
+
+        while (true) {
+            // Find the kth node from prevGroupEnd
+            ListNode* kth = prevGroupEnd;
+            for (int i = 0; i < k && kth; i++) {
+                kth = kth->next;
+            }
+            if (!kth) break; // fewer than k nodes left
+
+            // Mark group boundaries
+            ListNode* groupStart = prevGroupEnd->next;
+            ListNode* nextGroupStart = kth->next;
+
+            // Reverse the group
+            kth->next = nullptr;
+            ListNode* reversedHead = reverseLL(groupStart);
+
+            // Reconnect
+            prevGroupEnd->next = reversedHead;
+            groupStart->next = nextGroupStart;
+
+            // Move to the end of the reversed group
+            prevGroupEnd = groupStart;
+        }
+        return dummy->next;
+    }
+};
