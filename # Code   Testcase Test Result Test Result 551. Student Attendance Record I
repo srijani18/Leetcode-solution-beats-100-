@@ -1,0 +1,64 @@
+### 💡 Problem
+Given a student's attendance record string `s`, return `true` if the student can be rewarded.  
+The student is rewarded if:
+- They have **fewer than 2 absences ('A')**, and
+- They **never have more than 2 consecutive lates ('L')**.
+
+---
+# Solution By Srijani Guha Ray
+### 🧠 Approach
+Use **recursion** to simulate checking each character:
+- Track total absences (`a`) and consecutive lates (`l`).
+- Stop early if constraints are violated:
+  - `a >= 2` → invalid
+  - `l > 2` → invalid
+- Continue until the end of the string, then confirm both conditions are valid.
+
+---
+
+### 🧮 Complexity
+| Type | Complexity | Description |
+|------|-------------|--------------|
+| **Time** | O(n) | Process each character once |
+| **Space** | O(n) | Recursive call stack |
+
+---
+
+### ✅ Example
+**Input:** `"PPALLP"`  
+**Output:** `true`
+
+**Explanation:**  
+- Only 1 absence → ✅  
+- No more than 2 consecutive lates → ✅  
+Hence, the student can be rewarded.
+
+
+Code-
+class Solution {
+public:
+    bool check(string s, int a, int l,  int i, int n)
+    {
+        
+        if(i==n && a<2 && l<3)
+            return true;
+        if(i==n)
+            return false;
+        if(s[i]=='A')
+            {a++;
+            if(a==2)    return false;
+            l=0;}
+        if(s[i]=='L')
+            {l++;
+            if (l>2) return false;
+            }
+        if(s[i]=='P')
+            {
+            l=0;}
+        return check(s, a, l, i+1, n);
+        
+    }
+    bool checkRecord(string s) {
+        return check(s, 0, 0, 0,  s.size());
+    }
+};
