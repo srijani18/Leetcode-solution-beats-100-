@@ -1,0 +1,67 @@
+# 🧩 LeetCode 90 — Subsets II
+
+## 🔍 Problem Statement
+Given an integer array `nums` that may contain duplicates, return **all possible unique subsets** (the power set).
+
+The solution set must **not contain duplicate subsets**, and the subsets can be returned in **any order**.
+
+
+#solution by Srijani Guha Ray
+### Example
+**Input:**  
+`nums = [1,2,2]`  
+
+**Output:**  
+`[[], [1], [1,2], [1,2,2], [2], [2,2]]`
+
+---
+
+## 💡 Intuition
+We want to generate all possible subsets (the power set), but since `nums` may contain duplicates, we need to avoid repeating the same subset.
+
+To handle this:
+1. **Sort the array** — so duplicates appear next to each other.
+2. Use **backtracking** to explore each subset.
+3. **Skip duplicates**: when the current element is the same as the previous one and occurs at the same recursive level, we continue to the next element.
+
+This ensures that each unique subset is added exactly once.
+
+---
+
+## 🧠 Approach
+1. Sort the input array `nums`.
+2. Use a recursive helper function `subsets(nums, res, start, n, arr)`:
+   - Push the current subset `arr` into the result.
+   - Loop from `i = start` to `n - 1`:
+     - Skip duplicates using  
+       `if (i > start && nums[i] == nums[i-1]) continue;`
+     - Include the current element `nums[i]` in the current subset.
+     - Recurse with `i + 1` as the new start.
+     - Backtrack by removing the last element.
+
+---
+
+## 🧩 Code
+```cpp
+class Solution {
+public:
+    void subsets(vector<int> nums, vector<vector<int>>& res, int start, int n, vector<int>& arr) {
+        res.push_back(arr);
+        
+        for(int i = start; i < n; i++) {
+            if(i > start && nums[i] == nums[i - 1]) continue; // skip duplicates
+
+            arr.push_back(nums[i]);
+            subsets(nums, res, i + 1, n, arr); // move to next element
+            arr.pop_back(); // backtrack
+        }
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> arr;
+        sort(nums.begin(), nums.end()); // sort to group duplicates
+        subsets(nums, res, 0, nums.size(), arr);
+        return res;
+    }
+};
