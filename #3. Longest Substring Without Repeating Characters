@@ -1,0 +1,69 @@
+3. Longest Substring Without Repeating Characters
+Given a string s, find the length of the longest substring without duplicate characters.
+
+#solution by Srijani Guha Ray
+### 🧠 Intuition
+The problem asks for the length of the **longest substring without repeating characters**.  
+To solve this efficiently, we use a **sliding window** approach.  
+The idea is to maintain a window `[i, j)` that always contains **unique characters**.  
+We expand the window by moving `j` forward and shrink it from the left (`i`) whenever a duplicate character appears.
+
+---
+
+### 💡 Approach
+1. Use a `vector<int> visited(256, 0)` to track if a character is currently inside the window.  
+   (We use 256 to cover all ASCII characters.)
+2. Initialize two pointers `i` and `j` to represent the window boundaries.
+3. Move `j` forward one character at a time:
+   - If `s[j]` is **not visited**, mark it as visited and update the current window length `j - i + 1`.
+   - If `s[j]` **is already visited**, move `i` forward and unmark characters until the duplicate is removed.
+4. Keep updating `maxlen` with the maximum window size seen so far.
+5. Return `maxlen` at the end.
+
+---
+
+### ⏱️ Time Complexity
+**O(n)** — Each character is visited at most twice (once by `j`, once by `i`).
+
+---
+
+### 💾 Space Complexity
+**O(1)** — The `visited` array has a constant size of 256, independent of input length.
+
+---
+
+### ✅ Example
+Window expansion:
+"abc" → maxlen = 3
+Duplicate 'a' → move i forward
+Continue → maxlen stays 3
+
+Output: 3
+
+
+---
+
+### 🧩 Code
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        vector<int> visited(256, 0);
+        int n = s.size();
+        int i = 0, j = 0, maxlen = 0;
+
+        while (i < n && j < n) {
+            if (visited[s[j]] == 0) {
+                visited[s[j]] = 1;
+                int len = j - i + 1;
+                maxlen = max(maxlen, len);
+                j++;
+            } else {
+                visited[s[i]] = 0;
+                i++;
+            }
+        }
+        return maxlen;
+    }
+};
+
