@@ -1,0 +1,61 @@
+Problem Statement: 2220. Minimum Bit Flips to Convert Number
+A bit flip of a number x is choosing a bit in the binary representation of x and flipping it from either 0 to 1 or 1 to 0.
+
+For example, for x = 7, the binary representation is 111 and we may choose any bit (including any leading zeros not shown) and flip it. We can flip the first bit from the right to get 110, flip the second bit from the right to get 101, flip the fifth bit from the right (a leading zero) to get 10111, etc.
+Given two integers start and goal, return the minimum number of bit flips to convert start to goal.
+
+Intuition
+The problem asks for the minimum number of bit flips needed to convert one integer (start) into another (goal).
+A bit flip changes a 0 to 1 or a 1 to 0.
+
+
+#Solution by Srijani Guha Ray
+
+The key observation is:
+➡️ Wherever the binary representations of start and goal differ, we need one flip.
+
+To find those differing bits efficiently, we use the XOR (^) operator:
+
+1 ^ 1 = 0 → same bits
+
+0 ^ 0 = 0 → same bits
+
+1 ^ 0 = 1 or 0 ^ 1 = 1 → different bits
+
+So start ^ goal gives a number whose binary form has 1s exactly where flips are needed.
+The answer is simply the number of set bits (1s) in this XOR result.
+
+Approach
+Compute c = start ^ goal to get differing bit positions.
+
+Count the number of 1s in c (each represents a flip).
+
+Return the count.
+
+This can be done using division by 2 (% 2 and / 2) or bit manipulation (n & (n-1)).
+
+Complexity
+Time complexity:
+O(log n), where n is the larger of start or goal.
+Each iteration processes one bit.
+
+Space complexity:
+O(1) — constant extra space.
+
+Code
+class Solution {
+public:
+    int minBitFlips(int start, int goal) {
+        
+        int c=start^goal;
+        int count=0;
+        while(c>0)
+        {
+            int rem=c%2;
+            if(rem==1)
+                count++;
+            c=c/2;
+        }
+        return count;
+    }
+};
