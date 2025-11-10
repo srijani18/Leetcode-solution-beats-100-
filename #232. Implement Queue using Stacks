@@ -1,0 +1,113 @@
+
+Problem Statement: Implement Queue using Stack 
+
+#solution by Srijani Guha Ray
+Intuition
+
+A queue follows the First In First Out (FIFO) order — the element inserted first should come out first.
+A stack, however, is Last In First Out (LIFO) — the element inserted last comes out first.
+So, if we only have stacks but want queue behavior, we need to reverse the order of elements so that the element that was pushed earliest is at the top when we pop.
+The key idea:
+Use two stacks to simulate the FIFO order — one for inserting elements and the other for reversing the order when necessary.
+
+Approach
+
+We maintain two stacks:
+st1 → main stack (always keeps the front element on top)
+st2 → temporary stack (used to reverse order during each push)
+
+🔹 Push(x)
+
+If st2 is empty, move all elements from st1 to st2.
+(This step reverses the order, so the oldest element ends up at the bottom.)
+Push the new element x onto st1.
+Move all elements back from st2 to st1.
+This ensures that the front of the queue remains at the top of st1.
+Now, the top of st1 always represents the front of the queue, and you can directly perform pop/peek in O(1).
+
+🔹 Pop()
+Remove and return the top element of st1, which represents the front of the queue.
+
+🔹 Peek()
+Return the top element of st1 without removing it.
+
+🔹 Empty()
+Return true if st1 is empty, else false.
+
+
+| Operation | st1 (top → bottom) | st2 (top → bottom) | Front |
+| --------- | ------------------ | ------------------ | ----- |
+| push(10)  | [10]               | []                 | 10    |
+| push(20)  | [10, 20]           | []                 | 10    |
+| push(30)  | [10, 20, 30]       | []                 | 10    |
+| pop()     | [10, 20]           | []                 | 20    |
+| peek()    | [10, 20]           | []                 | 10    |
+
+| Operation | Time Complexity                            | Space Complexity |
+| --------- | ------------------------------------------ | ---------------- |
+| `push()`  | **O(n)** — due to reversing via two stacks | **O(n)**         |
+| `pop()`   | **O(1)**                                   | **O(n)**         |
+| `peek()`  | **O(1)**                                   | **O(n)**         |
+| `empty()` | **O(1)**                                   | **O(1)**         |
+
+class MyQueue {
+    stack<int> st1;
+    stack<int> st2;
+public:
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+       if(st2.empty())
+       {
+        while(!st1.empty())
+        {
+            int t=st1.top();
+            st1.pop();
+            st2.push(t);
+
+        }
+
+
+       }
+       st1.push(x);
+       while(!st2.empty())
+       {
+        int t=st2.top();
+        st1.push(t);
+        st2.pop();
+       }
+
+    }
+    
+    int pop() {
+        if(st1.empty())
+            return -1;
+        int t=st1.top();
+        st1.pop();
+        return t;
+        
+    }
+    
+    int peek() {
+        if(st1.empty())
+            return -1;
+        return st1.top();
+    }
+    
+    bool empty() {
+        if(st1.empty())
+            return true;
+        return false;
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
