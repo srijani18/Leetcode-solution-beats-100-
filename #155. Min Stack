@@ -1,0 +1,102 @@
+Problem Statement: 
+Implement Min Stack
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+Implement the MinStack class:
+
+MinStack() initializes the stack object.
+void push(int val) pushes the element val onto the stack.
+void pop() removes the element on the top of the stack.
+int top() gets the top element of the stack.
+int getMin() retrieves the minimum element in the stack.
+You must implement a solution with O(1) time complexity for each function.
+Intuition
+A normal stack supports push, pop, and top, but not efficient retrieval of the minimum element.
+If we try to find the minimum by scanning the stack every time, it would cost O(n) per query — too slow.
+
+To achieve O(1) getMin(), we maintain a second stack (st2) that tracks the minimum value at every stage of the stack.
+So, for each element in the main stack, there’s a corresponding element in st2 that represents the smallest value up to that point.
+
+Approach
+
+We use two stacks:
+st1: stores all pushed elements (normal stack behavior).
+st2: stores the current minimum value at each level.
+
+Operations:
+
+push(val)
+Push val into st1.
+
+For st2:
+If empty → push val.
+
+Otherwise → push min(val, st2.top()).
+(This ensures the top of st2 always holds the current minimum.)
+
+pop(): Pop from both st1 and st2 (so they stay synchronized).
+
+top(): Return the top element of st1.
+
+getMin(): Return the top element of st2, which always represents the minimum of the current stack.
+
+| Operation  | Time |
+| ---------- | ---- |
+| `push()`   | O(1) |
+| `pop()`    | O(1) |
+| `top()`    | O(1) |
+| `getMin()` | O(1) |
+
+| Structure | Space |
+| --------- | ----- |
+| `st1`     | O(n)  |
+| `st2`     | O(n)  |
+
+class MinStack {
+    stack<int> st1;
+    stack<int> st2;
+public:
+
+    MinStack() {
+        
+    }
+    
+    void push(int val) {
+        
+        st1.push(val);
+
+        if(st2.empty())
+            st2.push(val);
+        else
+            {
+                if(st2.top()>val)
+                {
+                    st2.push(val);
+                }
+                else
+                    st2.push(st2.top());
+            }
+    }
+    
+    void pop() {
+        st1.pop();
+        st2.pop();
+    }
+    
+    int top() {
+        return st1.top();
+    }
+    
+    int getMin() {
+        return st2.top();
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(val);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
